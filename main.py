@@ -183,12 +183,20 @@ def main():
 
     show_info(win, join('.', 'messages', 'before_experiment.txt'))
 
-    stim_seq_experiment = [conf["STIM_LETTERS"][0]] * conf["LEFT_CONG_PROPORTION"] + [conf["STIM_LETTERS"][1]] * conf[
-        "RIGHT_CONG_PROPORTION"] + [
-                              conf["STIM_LETTERS"][2]] * conf["LEFT_INCONG_PROPORTION"] + [conf["STIM_LETTERS"][3]] * \
-                          conf["RIGHT_INCONG_PROPORTION"] #tworzy list? bod?ców wg. proporcji u?ytkownika
+    # stimuli:
+    left_congr = [conf["STIM_LETTERS"][0]]
+    right_congr = [conf["STIM_LETTERS"][1]]
+    left_incongr = [conf["STIM_LETTERS"][3]]
+    right_incongr = [conf["STIM_LETTERS"][2]]
 
-    print(stim_seq_experiment)
+    # stimuli proportions:
+    left_congr_prop = conf["LEFT_CONG_PROPORTION"]
+    right_congr_prop = conf["RIGHT_CONG_PROPORTION"]
+    left_incongr_prop = conf["LEFT_INCONG_PROPORTION"]
+    right_incongr_prop = conf["RIGHT_INCONG_PROPORTION"]
+    
+    #stimuli list with proportions set:
+    stim_seq_experiment = left_congr * left_congr_prop + right_congr * right_congr_prop + left_incongr * left_incongr_prop + right_incongr * right_incongr_prop
 
     for block_no in range(conf['NO_BLOCKS']):
         random.shuffle(stim_seq_experiment)
@@ -238,12 +246,22 @@ def run_trial(win, conf, stim, clock, fix_cross):
         key_pressed = 'no_key'
         rt = -1.0
 
+    # reactions:
+    reaction_left = conf["REACTION_KEYS"][0]
+    reaction_right = conf["REACTION_KEYS"][1]
+
+    # stimuli:
+    left_congr = conf["STIM_LETTERS"][0]
+    right_congr = conf["STIM_LETTERS"][1]
+    left_incongr = conf["STIM_LETTERS"][3]
+    right_incongr = conf["STIM_LETTERS"][2]
+
     # trial correct if:
-    cond1 = key_pressed == conf["REACTION_KEYS"][0] and (
-            stim.text == conf["STIM_LETTERS"][0] or stim.text == conf["STIM_LETTERS"][3])
+    cond1 = key_pressed == reaction_left and (
+            stim.text == left_congr or stim.text == left_incongr)
     # or
-    cond2 = key_pressed == conf["REACTION_KEYS"][1] and (
-            stim.text == conf["STIM_LETTERS"][1] or stim.text == conf["STIM_LETTERS"][2])
+    cond2 = key_pressed == reaction_right and (
+            stim.text == right_congr or stim.text == right_incongr)
 
     if cond1 or cond2:
         corr = True
